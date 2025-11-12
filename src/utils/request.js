@@ -1,7 +1,8 @@
 import axios from 'axios';
 import qs from 'qs';
 import store from '@/store/index';
-import { getUrlParam } from './index';
+import router from '@/router';
+import { getToken, clearToken } from './auth';
 import { recommendGiftLogic, funcTipLogic } from './service';
 // import app from '../main';
 
@@ -20,7 +21,6 @@ function transformRequestData(data) {
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
   headers: {
-    token: getUrlParam('token'),
     'Content-Type': 'application/x-www-form-urlencoded',
   },
   transformRequest: [transformRequestData],
@@ -32,18 +32,47 @@ service.interceptors.request.use((config) => {
   resetRecommendInterval();
   // 重置功能提示定时器
   resetFuncTipInterval();
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.token = token;
+  } else {
+    delete config.headers.Authorization;
+    delete config.headers.token;
+  }
   return config;
 });
 // 过滤响应
-service.interceptors.response.use((result) => {
-  if (result.data.message === '401') {
-    console.log(result);
-    // app.$toast.center('登录已过期,请删除小程序重新进入!');
-    // 通知websocket关闭
-    store.commit('app/setNeedLogin', true);
-    return Promise.reject();
+service.interceptors.response.use(
+  (result) => {
+    if (result.data && result.data.message === '401') {
+      console.log(result);
+      // 通知websocket关闭
+      handleUnauthorized();
+      return Promise.reject(result);
+    }
+    return result.data.data;
+  },
+  (error) => {
+    if (error && error.response && error.response.status === 401) {
+      handleUnauthorized();
+    }
+    return Promise.reject(error);
+  },
+);
+
+function handleUnauthorized() {
+  clearToken();
+  store.commit('app/setNeedLogin', true);
+  const currentRoute = router.currentRoute;
+  if (currentRoute && currentRoute.name !== 'login') {
+    router.replace({
+      name: 'login',
+      query: {
+        redirect: currentRoute.fullPath,
+      },
+    });
   }
-  return result.data.data;
-});
+}
 
 export default service;
