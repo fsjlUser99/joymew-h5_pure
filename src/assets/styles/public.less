@@ -1,0 +1,84 @@
+//background模块的层级
+@zIndex-background: 0;
+//聊天区域层级
+@zIndex-chatArea: 0;
+//效果层的层级
+@zIndex-effectArea: 1;
+//header模块的层级
+@zIndex-header: 2;
+//右下角模块的层级
+@zIndex-bottomRightCorner: 2;
+//底部模块的层级
+@zIndex-bottomArea: 2;
+@zIndex-btn: 2;
+//弹出层的层级
+@zIndex-popupArea: 3;
+//loading模块的层级
+@zIndex-loading: 4;
+// 按钮的层级
+//水平垂直居中
+.hvCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+//水平居中
+.hCenter {
+    display: flex;
+    justify-content: center;
+}
+
+//水平偏右
+.hRight{
+    display: flex;
+    justify-content: flex-end;
+}
+
+//垂直居中
+.vCenter {
+    display: flex;
+    align-items: center;
+}
+//垂直偏下
+.vBottom{
+    display: flex;
+    align-items: flex-end;
+}
+
+//水平两边布局、垂直居中
+.hvSideCenter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+// 水平四周布局
+.hAround{
+    display: flex;
+    justify-content: space-around;
+}
+// 水平四周布局、垂直居中
+.hvAroundCenter {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+//多个元素 水平垂直居中
+.multiHvCenter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+//多个元素 垂直两边布局
+.multiVCenter{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+//多个元素 水平居中
+.multiHcenter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

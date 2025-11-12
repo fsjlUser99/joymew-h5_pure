@@ -1,0 +1,68 @@
+/* background模块的层级 */
+.publicZIndexBackground {
+    z-index: 0;
+}
+
+/* 按钮的层级 */
+.publicZIndexBtn {
+    z-index: 0;
+}
+
+/* 聊天区域层级 */
+.publicZIndexChatArea {
+    z-index: 0;
+}
+
+/* 效果层的层级 */
+.publicZIndexEffectArea {
+    z-index: 1;
+}
+
+/* header模块的层级 */
+.publicZIndexHeader {
+    z-index: 1;
+}
+
+/* 右下角模块的层级 */
+.publicZIndexBottomRightCorner {
+    z-index: 2;
+}
+
+/* 底部模块的层级 */
+.publicZIndexBottomArea {
+    z-index: 2;
+}
+/* 按钮的层级 */
+.publicZIndexRealBtn {
+    z-index: 2;
+}
+
+/* 弹出层的层级 */
+.publicZIndexPopupArea {
+    z-index: 3;
+}
+/* 使用提示 */
+.publicZIndexUseTip {
+    z-index: 3;
+}
+/* loading模块的层级 */
+.publicZIndexLoading {
+    z-index: 4;
+}
+/* 水平居中 */
+.publicHCenter {
+    display: flex;
+    justify-content: center;
+}
+/* 垂直居中 */
+.publicVCenter {
+    display: flex;
+    align-items: center;
+}
+
+/* 水平垂直居中 */
+.publicHvCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
