@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import { getToken } from '@/utils/auth';
 
 const VueRouterPush = VueRouter.prototype.push;
 const VueRouterReplace = VueRouter.prototype.replace;
@@ -13,6 +14,16 @@ VueRouter.prototype.replace = function replace(to) {
 Vue.use(VueRouter);
 
 export const routes = [
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/auth/Login.vue'),
+    meta: {
+      title: '登录',
+      skipAuth: true,
+      skipAppBootstrap: true,
+    },
+  },
   {
     path: '/error',
     name: 'error',
@@ -435,9 +446,34 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   console.log(from);
-  if (to.meta.title) {
+  if (to.meta && to.meta.title) {
     document.title = to.meta.title;
   }
-  next();
+  const whiteList = new Set(['login', 'error', 'guessHbPay']);
+  const skipAuth = to.matched.some((record) => record.meta && record.meta.skipAuth);
+  if (skipAuth) {
+    next();
+    return;
+  }
+  const token = getToken();
+  if (token) {
+    if (to.name === 'login') {
+      const redirect = to.query.redirect || '/';
+      next(redirect);
+      return;
+    }
+    next();
+    return;
+  }
+  if (whiteList.has(to.name)) {
+    next();
+    return;
+  }
+  next({
+    name: 'login',
+    query: {
+      redirect: to.fullPath,
+    },
+  });
 });
 export default router;

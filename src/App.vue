@@ -9,6 +9,7 @@ import { mapMutations, mapState } from 'vuex';
 import wxApi from '@/utils/wxApi';
 import connectWS from '@/utils/websocket/index';
 import { getUrlParam, isEndWithX, timeoutTask } from '@/utils/index';
+import { getToken as getStoredToken, setToken as persistToken } from '@/utils/auth';
 import {
   formatPhotoTypeList,
   formatDanmuTypeList,
@@ -46,63 +47,30 @@ export default {
   components: {
     loading,
   },
+  data() {
+    return {
+      hasBootstrapped: false,
+    };
+  },
   computed: {
     ...mapState({
       isInOtherWeviewH5: (state) => state.app.isInOtherWeviewH5,
       isCloseCoin: (state) => state.app.isCloseCoin,
+      needLogin: (state) => state.app.needLogin,
     }),
   },
+  watch: {
+    '$route.fullPath'() {
+      this.tryBootstrap();
+    },
+    needLogin(val) {
+      if (val) {
+        this.hasBootstrapped = false;
+      }
+    },
+  },
   created() {
-    // 扫码进入猜红包支付
-    if (isEndWithX(window.location.href, 'guessHbPay')) {
-      this.setIsInOtherWeviewH5(true);
-      this.initGuessHbLogic();
-      return;
-    }
-    this.setToken(getUrlParam('token'));
-    this.setLiveId(getUrlParam('liveId'));
-    this.setUserPhone(getUrlParam('userPhone'));
-    this.setIsHlt(getUrlParam('isHlt'));
-    this.setMiniProgramType(getUrlParam('miniProgramType'));
-    this.setMpType(getUrlParam('mpType'));
-    this.setHotelConfig({
-      type: getUrlParam('type'),
-      bottom: getUrlParam('bottom'),
-      enter: getUrlParam('enter'),
-      userphone: getUrlParam('userphone'),
-    });
-    // 判断是否是在其他webview容器中打开应用或者其他场景直接打开应用页面
-    this.setIsInOtherWeviewH5(WEBVIEWH5.some((item) => isEndWithX(window.location.href, item)));
-    // 判断执行环境后获取活动信息
-    wxApi
-      .judgeEnv()
-      .then(() => {
-        return this.$store.state.app.env;
-      })
-      .then((rEnv) => {
-        if (rEnv === 'h5' && isEndWithX(window.location.href, 'hotelReserve')) {
-          // 直接点h5链接进入婚宴预定
-          this.initH5HotelReserveLogic();
-        } else if (rEnv === 'h5') {
-          // h5访问
-          wxApi.initWXAPI().then((res) => {
-            console.log(res);
-          });
-        }
-        return getLiveInfo();
-      })
-      .then((res) => {
-        console.log('活动信息:', res);
-        if (res) {
-          this.handleLiveInfo(res);
-          // if (this.$store.state.app.env === 'miniProgram' || this.$store.state.app.env === 'tt') {
-          //   this.setEnterSceneInfo();
-          // }
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    this.tryBootstrap();
   },
   mounted() {
     connectWS();
@@ -182,6 +150,73 @@ export default {
       setSwitchFuligoAd: 'app/setSwitchFuligoAd',
       setSwitchContent: 'app/setSwitchContent',
     }),
+    tryBootstrap() {
+      if (this.$route.meta && this.$route.meta.skipAppBootstrap) {
+        return;
+      }
+      if (this.hasBootstrapped) {
+        return;
+      }
+      const isGuessHbPay = isEndWithX(window.location.href, 'guessHbPay');
+      const urlToken = getUrlParam('token');
+      if (urlToken) {
+        persistToken(urlToken);
+      }
+      const storedToken = getStoredToken();
+      if (!storedToken && !isGuessHbPay) {
+        this.$store.commit('app/setNeedLogin', true);
+        return;
+      }
+      this.hasBootstrapped = true;
+      this.initializeApp(storedToken, isGuessHbPay);
+    },
+    initializeApp(token, isGuessHbPay) {
+      if (isGuessHbPay) {
+        this.setIsInOtherWeviewH5(true);
+        this.initGuessHbLogic();
+        return;
+      }
+      if (token) {
+        this.setToken(token);
+        this.$store.commit('app/setNeedLogin', false);
+      }
+      this.setLiveId(getUrlParam('liveId'));
+      this.setUserPhone(getUrlParam('userPhone'));
+      this.setIsHlt(getUrlParam('isHlt'));
+      this.setMiniProgramType(getUrlParam('miniProgramType'));
+      this.setMpType(getUrlParam('mpType'));
+      this.setHotelConfig({
+        type: getUrlParam('type'),
+        bottom: getUrlParam('bottom'),
+        enter: getUrlParam('enter'),
+        userphone: getUrlParam('userphone'),
+      });
+      this.setIsInOtherWeviewH5(WEBVIEWH5.some((item) => isEndWithX(window.location.href, item)));
+      wxApi
+        .judgeEnv()
+        .then(() => {
+          return this.$store.state.app.env;
+        })
+        .then((rEnv) => {
+          if (rEnv === 'h5' && isEndWithX(window.location.href, 'hotelReserve')) {
+            this.initH5HotelReserveLogic();
+          } else if (rEnv === 'h5') {
+            wxApi.initWXAPI().then((res) => {
+              console.log(res);
+            });
+          }
+          return getLiveInfo();
+        })
+        .then((res) => {
+          console.log('活动信息:', res);
+          if (res) {
+            this.handleLiveInfo(res);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     setEnterSceneInfo() {
       if (this.$store.state.app.isInOtherWeviewH5) {
         // 其他webview容器打开应用的情况下不需要设置进入场景

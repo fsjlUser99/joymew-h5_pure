@@ -1,4 +1,5 @@
 import { getUrlParam } from '@/utils/index';
+import { getToken as getStoredToken, setToken as persistToken, clearToken as removeToken } from '@/utils/auth';
 import { getSceneInfoBySceneType } from '@/assets/constant/scene';
 import live from './live';
 
@@ -7,7 +8,7 @@ const state = {
   currentLoadingProgress: 0,
   popupAreaVisible: false,
   popupModuleKey: -1,
-  token: '',
+  token: getStoredToken(),
   chatAreaScrollId: '',
   previewImg: '', // 预览图片地址
   currentGiftType: '', // 当前选中的礼物类型(giftId)
@@ -95,7 +96,12 @@ const mutations = {
     state.currentLoadingProgress = `${data}%`;
   },
   setToken: (state, data) => {
-    state.token = data;
+    state.token = data || '';
+    if (state.token) {
+      persistToken(state.token);
+    } else {
+      removeToken();
+    }
   },
   setHotelConfig: (state, data) => {
     console.log('data', data);
