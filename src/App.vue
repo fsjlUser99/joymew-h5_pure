@@ -35,9 +35,7 @@ import {
   sendGiftCarnival,
   getH5DirectVisitInfo,
 } from '@/api/index/index';
-import {
-  sendGiftMessage, sendBapinGiftMessage, sendDanmuGiftMessage, sendPhotoGiftMessage,
-} from '@/api/chat/index';
+import { sendGiftMessage, sendBapinGiftMessage, sendDanmuGiftMessage, sendPhotoGiftMessage } from '@/api/chat/index';
 import { sendDiamondHb } from '@/api/diamondHb/index';
 import { POPUP_MODULE, WEBVIEWH5 } from '@/assets/constant/index';
 import loading from '@/components/loading/loading.vue';
@@ -151,24 +149,32 @@ export default {
       setSwitchContent: 'app/setSwitchContent',
     }),
     tryBootstrap() {
-      if (this.$route.meta && this.$route.meta.skipAppBootstrap) {
+      // 跳过登录页的启动逻辑
+      if (this.$route.meta?.skipAppBootstrap) {
         return;
       }
+
+      // 已经启动过,不重复启动
       if (this.hasBootstrapped) {
         return;
       }
-      const isGuessHbPay = isEndWithX(window.location.href, 'guessHbPay');
+
+      // 检查token
       const urlToken = getUrlParam('token');
       if (urlToken) {
         persistToken(urlToken);
       }
+
       const storedToken = getStoredToken();
-      if (!storedToken && !isGuessHbPay) {
+      if (!storedToken) {
+        // 没有token,标记需要登录
         this.$store.commit('app/setNeedLogin', true);
         return;
       }
+
+      // 有token,正常初始化
       this.hasBootstrapped = true;
-      this.initializeApp(storedToken, isGuessHbPay);
+      this.initializeApp(storedToken);
     },
     initializeApp(token, isGuessHbPay) {
       if (isGuessHbPay) {
@@ -312,10 +318,10 @@ export default {
         }
       } else if (origin === 'sendPhoto') {
         if (
-          this.isCloseCoin
-          && localStorage.getItem('tmpGiftId')
-          && localStorage.getItem('tmpGiftText')
-          && localStorage.getItem('tmpGiftPicture')
+          this.isCloseCoin &&
+          localStorage.getItem('tmpGiftId') &&
+          localStorage.getItem('tmpGiftText') &&
+          localStorage.getItem('tmpGiftPicture')
         ) {
           this.uploadPhoto().then((res1) => {
             console.log(res1);

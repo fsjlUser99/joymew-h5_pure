@@ -1,0 +1,27 @@
+/* 签到订婚宴样式 */
+.signWrap.dhy .bg {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/dhyMobileBg.png");
+}
+
+.signWrap.dhy .signForm {
+background-image: url(https://static.joymew.com/joymewMp/joymewIndex/box-04.png);
+}
+
+.signWrap.dhy .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.dhy .signForm .formItem .formItem-key {
+color: #ee8b6b;
+width: 135px;
+}
+
+.signWrap.dhy .signForm .formItem .formItem-value {
+color: #ee8b6b;
+border-bottom: 2px solid #e8757e;
+}
+
+.signWrap.dhy .signForm .buttonWrap .signButton {
+background: linear-gradient(180deg, #e87080 0%, #ee8b6b 100%);
+border-radius: 45px;
+} 

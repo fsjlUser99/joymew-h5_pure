@@ -1,0 +1,27 @@
+/* 签到乔迁宴样式 */
+.signWrap.qqy .bg {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/qqyBg.png");
+}
+
+.signWrap.qqy .signForm {
+background-color: #ff9484;
+}
+
+.signWrap.qqy .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.qqy .signForm .formItem .formItem-key {
+color: #333;
+width: 135px;
+}
+
+.signWrap.qqy .signForm .formItem .formItem-value {
+color: #333;
+border-bottom: 1px solid rgba(25, 255, 255, 0.6);
+}
+
+.signWrap.qqy .signForm .buttonWrap .signButton {
+background: #ef2152;
+border-radius: 45px;
+} 

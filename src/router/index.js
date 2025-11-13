@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import { getToken } from '@/utils/auth';
+import { getQianDaoInfo } from '@/api/index/index';
+import store from '@/store';
 
 const VueRouterPush = VueRouter.prototype.push;
 const VueRouterReplace = VueRouter.prototype.replace;
@@ -444,7 +446,7 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   console.log(from);
   if (to.meta && to.meta.title) {
     document.title = to.meta.title;
@@ -462,6 +464,25 @@ router.beforeEach((to, from, next) => {
       next(redirect);
       return;
     }
+    
+    // 检查签到逻辑
+    if (to.name === 'index2') {
+      try {
+        if (!store.state.app.qiandaoleme) {
+          const data = await getQianDaoInfo();
+          store.commit('app/setQiandaoleme', data.qian_dao_le_me || false);
+          if (!store.state.app.qiandaoleme) {
+            next('/sign');
+            return;
+          }
+        }
+      } catch (error) {
+        console.error('检查签到信息失败:', error);
+        next('/sign');
+        return;
+      }
+    }
+    
     next();
     return;
   }
@@ -473,6 +494,7 @@ router.beforeEach((to, from, next) => {
     name: 'login',
     query: {
       redirect: to.fullPath,
+      splid: to.query.splid || to.query.liveId || '', // 传递splid
     },
   });
 });

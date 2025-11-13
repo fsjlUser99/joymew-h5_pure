@@ -1,0 +1,26 @@
+/* 签到生日(通用版)样式 */
+.signWrap.birth .bg {
+    background-image: url("https://static.joymew.com/joymewMp/joymewIndex/birthBg3.png");
+  }
+  
+  .signWrap.birth .signForm {
+    background-color: #dbfafe;
+  }
+
+  .signWrap.birth .signForm .formItem {
+      align-items: center;
+  }
+  
+  .signWrap.birth .signForm .formItem .formItem-key {
+    color: #333;
+    width: 135px;
+  }
+  .signWrap.birth .signForm .formItem .formItem-value {
+    color: #333;
+    border-bottom: 1px solid rgba(51, 51, 51, 0.6);
+  }
+  
+  .signWrap.birth .signForm .buttonWrap .signButton {
+    background: #fab0ce;
+    border-radius: 45px;
+  }

@@ -1,0 +1,27 @@
+/* 签到同学会样式 */
+.signWrap.txh .bg {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/txhBg.png");
+}
+
+.signWrap.txh .signForm {
+background-color: #2c3032;
+}
+
+.signWrap.txh .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.txh .signForm .formItem .formItem-key {
+color: #fff;
+width: 135px;
+}
+
+.signWrap.txh .signForm .formItem .formItem-value {
+color: #fff;
+border-bottom: 1px solid rgba(25, 255, 255, 0.6);
+}
+
+.signWrap.txh .signForm .buttonWrap .signButton {
+background: #beb161;
+border-radius: 45px;
+} 

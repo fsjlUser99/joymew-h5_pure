@@ -1,0 +1,71 @@
+/* 签到婚礼版样式 */
+.signWrap.wedding .bg {
+background-image: url("https://static.hudongmiao.com/joymewMp/wedding/hunli-bg_purple.png");
+}
+
+.signWrap.wedding .signForm {
+background-image: url("https://static.hudongmiao.com/joymewMp/wedding/sign-bg.png");
+}
+.signWrap.wedding .signForm::after {
+content: "一起看美照、送祝福、玩游戏吧～";
+display: block;
+font-size: 29px;
+font-weight: 500;
+color: #ac063c;
+text-align: center;
+width: 100%;
+position: absolute;
+top: 40px;
+}
+
+.signWrap.wedding .signForm .formItem {
+flex-direction: column;
+}
+
+.signWrap.wedding .signForm .formItem:first-child {
+margin-top: 60px;
+}
+
+.signWrap.wedding .signForm .formItem .formItem-key {
+color: #ff797c;
+margin-bottom: 20px;
+}
+
+.signWrap.wedding .signForm .formItem .formItem-value {
+color: #008ebe;
+border-bottom: 1.92px solid #5ac2e5;
+}
+
+.signWrap.wedding .signForm .formItem .formItem-value.avatar .avatarButton {
+margin-left: auto;
+}
+
+.signWrap.wedding .signForm .formItem .formItem-value .inputWish {
+flex: 1;
+}
+
+.signWrap.wedding .signForm .formItem .formItem-value.chooseGroup {
+justify-content: space-around;
+border-bottom: none;
+}
+
+.signWrap.wedding .signForm .formItem .formItem-value.chooseGroup .chooseItem {
+width: 152px;
+height: 64px;
+background: rgba(90, 194, 229, 0.3);
+border-radius: 28px;
+font-size: 28px;
+font-weight: 400;
+text-align: center;
+line-height: 64px;
+color: #008ebe;
+}
+
+.signWrap.wedding .signForm .formItem .formItem-value.chooseGroup .chooseItem.choosed {
+color: #ffffff;
+background: #5ac2e5;
+}
+
+.signWrap.wedding .signForm .buttonWrap .signButton {
+background-image: url('https://static.hudongmiao.com/joymewMp/wedding/sign-btn-bg.png');
+} 

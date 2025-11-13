@@ -1,0 +1,27 @@
+/* 签到成人礼样式 */
+.signWrap.crl .bg {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/crlMobileBg2.png");
+}
+
+.signWrap.crl .signForm {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/signBoxCrl.png");
+}
+
+.signWrap.crl .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.crl .signForm .formItem .formItem-key {
+color: #333;
+width: 135px;
+}
+
+.signWrap.crl .signForm .formItem .formItem-value {
+color: #333;
+border-bottom: 1px solid #54d5e9;
+}
+
+.signWrap.crl .signForm .buttonWrap .signButton {
+background: #54d5e9;
+border-radius: 45px;
+} 

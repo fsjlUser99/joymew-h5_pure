@@ -1,0 +1,29 @@
+/* 签到金榜题名样式 */
+.signWrap.jbtm .bg {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/jbtmBg.png");
+background-size: 126% 101%;
+background-position: -69px -50px;
+}
+
+.signWrap.jbtm .signForm {
+background-color: #ffffd8;
+}
+
+.signWrap.jbtm .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.jbtm .signForm .formItem .formItem-key {
+color: #333;
+width: 135px;
+}
+
+.signWrap.jbtm .signForm .formItem .formItem-value {
+color: #333;
+border-bottom: 1px solid #e20013;
+}
+
+.signWrap.jbtm .signForm .buttonWrap .signButton {
+background: #e20013;
+border-radius: 45px;
+} 

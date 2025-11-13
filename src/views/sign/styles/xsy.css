@@ -1,0 +1,29 @@
+/* 签到谢师宴样式 */
+.signWrap.xsy .bg {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/xsyBg.png");
+background-size: 112% 101%;
+background-position-x: -15px;
+}
+
+.signWrap.xsy .signForm {
+background-color: #fef188;
+}
+
+.signWrap.xsy .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.xsy .signForm .formItem .formItem-key {
+color: #333;
+width: 135px;
+}
+
+.signWrap.xsy .signForm .formItem .formItem-value {
+color: #333;
+border-bottom: 1px solid #e20013;
+}
+
+.signWrap.xsy .signForm .buttonWrap .signButton {
+background: #e20013;
+border-radius: 45px;
+} 

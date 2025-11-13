@@ -1,19 +1,40 @@
 <template>
   <div class="auth-login">
-    <div v-if="status === 'processing'" class="auth-login__message">正在登录，请稍候…</div>
-    <div v-else-if="status === 'authorizing'" class="auth-login__message">正在跳转至微信授权…</div>
-    <div v-else-if="status === 'error'" class="auth-login__message">
-      <p>登录失败：{{ errorMessage }}</p>
-      <button type="button" class="auth-login__button" @click="restartAuth">重新登录</button>
+    <div
+      v-if="status === 'processing'"
+      class="auth-login__message"
+    >
+      正在登录，请稍候…
     </div>
-    <div v-else class="auth-login__message">
+    <div
+      v-else-if="status === 'authorizing'"
+      class="auth-login__message"
+    >
+      正在跳转至微信授权…
+    </div>
+    <div
+      v-else-if="status === 'error'"
+      class="auth-login__message"
+    >
+      <p>登录失败：{{ errorMessage }}</p>
+      <button
+        type="button"
+        class="auth-login__button"
+        @click="restartAuth"
+      >
+        重新登录
+      </button>
+    </div>
+    <div
+      v-else
+      class="auth-login__message"
+    >
       <p v-if="!isWeixin">请在微信内打开链接以完成登录。</p>
       <p v-else-if="!wechatAppId">缺少微信应用配置，请联系管理员。</p>
       <button
         v-if="isWeixin && wechatAppId"
         type="button"
         class="auth-login__button"
-        @click="startWechatAuth"
       >
         立即前往微信授权
       </button>
@@ -23,8 +44,8 @@
 
 <script>
 import { mapMutations } from 'vuex';
-import { loginByWechat } from '@/api/auth';
-import { buildWechatOAuthUrl, getToken as getStoredToken } from '@/utils/auth';
+import { h5UserLogin } from '@/api/auth';
+import { getToken as getStoredToken } from '@/utils/auth';
 
 const UA = navigator.userAgent.toLowerCase();
 
@@ -55,67 +76,47 @@ export default {
       setToken: 'app/setToken',
       setNeedLogin: 'app/setNeedLogin',
     }),
-    bootstrap() {
+    async bootstrap() {
+      // 1. 检查是否已有token
       const existingToken = getStoredToken();
       if (existingToken) {
         this.navigateAfterLogin();
         return;
       }
-      const { code } = this.$route.query;
-      if (code) {
-        this.exchangeCode(code);
+
+      // 2. 获取splid(即liveId)
+      const splid = this.$route.query.splid || this.$route.query.liveId;
+      if (!splid) {
+        this.showError('缺少必要参数splid');
         return;
       }
-      if (this.isWeixin && this.wechatAppId) {
-        this.startWechatAuth();
-      } else {
-        this.status = 'ready';
-      }
+
+      // 3. 直接调用登录接口
+      await this.login(splid);
     },
-    startWechatAuth() {
-      if (!this.isWeixin || !this.wechatAppId) {
-        this.status = 'error';
-        this.errorMessage = '当前环境无法发起微信授权。';
-        return;
+    async login(splid) {
+      try {
+        this.status = 'loading';
+        const result = await h5UserLogin({ splid });
+        const token = result?.token || result?.data?.token;
+
+        if (!token) {
+          throw new Error('登录失败,未获取到token');
+        }
+
+        // 存储token并跳转
+        this.setToken(token);
+        this.navigateAfterLogin();
+      } catch (err) {
+        // 后端会处理OAuth重定向,这里只处理真正的错误
+        console.error('登录错误:', err);
+        this.showError(err.message);
       }
-      this.status = 'authorizing';
-      const redirectBase = `${window.location.origin}${window.location.pathname}${window.location.search}`;
-      const redirectQuery = this.redirect
-        ? `#/login?redirect=${encodeURIComponent(this.redirect)}`
-        : '#/login';
-      const redirectUri = `${redirectBase}${redirectQuery}`;
-      const authUrl = buildWechatOAuthUrl({
-        appId: this.wechatAppId,
-        redirectUri,
-        state: this.redirect,
-      });
-      window.location.replace(authUrl);
     },
     restartAuth() {
       this.errorMessage = '';
       this.status = 'idle';
       this.bootstrap();
-    },
-    async exchangeCode(code) {
-      this.status = 'processing';
-      try {
-        const payload = {
-          code,
-          liveId: this.$route.query.liveId || this.$store.state.live.liveId || '',
-        };
-        const result = await loginByWechat(payload);
-        const token = result && (result.token || (result.data && result.data.token));
-        if (!token) {
-          throw new Error('未获取到有效的登录凭证');
-        }
-        this.setToken(token);
-        this.setNeedLogin(false);
-        this.navigateAfterLogin();
-      } catch (err) {
-        console.error(err);
-        this.status = 'error';
-        this.errorMessage = err.message || '登录失败，请稍后重试';
-      }
     },
     navigateAfterLogin() {
       const target = this.redirect || '/';

@@ -1,0 +1,40 @@
+/* 签到圆锁宴样式 */
+.signWrap.ysy .bg {
+background-image: url("https://ustatic.hudongmiao.com/joymewScreen/background/yxy/ysx-mobile_bg.png");
+}
+
+.signWrap.ysy .signForm {
+background-color: #cf1820;
+}
+
+.signWrap.ysy .signForm::before {
+display: block;
+content: "";
+background-size: cover;
+background-image: url('https://static.joymew.com/joymewMp/joymewIndex/ysyMobileBg4.png');
+width: 750px;
+height: 400px;
+position: absolute;
+left: -50px;
+bottom: -433px;
+background-position-y: -800px;
+}
+
+.signWrap.ysy .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.ysy .signForm .formItem .formItem-key {
+color: #fff;
+width: 135px;
+}
+
+.signWrap.ysy .signForm .formItem .formItem-value {
+color: #fff;
+border-bottom: 1px solid #cc8c8c;
+}
+
+.signWrap.ysy .signForm .buttonWrap .signButton {
+background: #fddd97;
+border-radius: 45px;
+} 

@@ -1,0 +1,95 @@
+/* 签到公共样式 */
+.joymewIndex {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.signWrap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signWrap .bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-size: 100% 100%;
+}
+
+.signWrap .bg .customBg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.signForm {
+  position: absolute;
+  width: 650px;
+  padding: 40px 0;
+  background-size: 100% 100%;
+  bottom: 100px;
+}
+
+.formItem {
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  font-size: 32px;
+  font-weight: 400;
+  margin-bottom: 40px;
+}
+
+.formItem-value {
+  display: flex;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.inputNickName, .inputWish, .inputPhone {
+  padding-right: 60px;
+  width: 100%;
+  background: transparent;
+  border: none;
+}
+
+.icon-shuaxin {
+  font-weight: 600;
+  width: 60px;
+  display: block;
+  text-align: right;
+}
+
+.buttonWrap {
+  display: flex;
+  justify-content: center;
+}
+
+.signButton {
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 380px;
+  height: 85px;
+  color: #ffffff;
+}
+
+.signButton::after {
+  content: "点击进入";
+  display: block;
+  position: absolute;
+}

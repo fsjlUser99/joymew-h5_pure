@@ -121,13 +121,7 @@ export default {
     },
   },
   async created() {
-    if (!this.$store.state.app.qiandaoleme) {
-      const data = await getQianDaoInfo();
-      this.$store.commit('app/setQiandaoleme', data.qian_dao_le_me || false);
-      if (!this.$store.state.app.qiandaoleme) {
-        this.$router.push('/error');
-      }
-    }
+    // 逻辑已移至路由守卫
   },
   async mounted() {
     enterGameLock = false;

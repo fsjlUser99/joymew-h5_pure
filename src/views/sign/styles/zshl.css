@@ -1,0 +1,94 @@
+/* 中式婚礼样式 */
+.signWrap.zshl .bg {
+background-image: url("https://ustatic.joymew.com/joymewScreen/zshl/mobile/welcomeBg.png");
+background-size: cover;
+}
+.signWrap.zshl .signForm::before {
+position: absolute;
+width: 588px;
+height: 232px;
+top: -380px;
+content: "";
+display: block;
+background-size: 100% 100%;
+background-image: url("https://ustatic.joymew.com/joymewScreen/zshl/mobile/weTitle.png");
+}
+.signWrap.zshl .signForm {
+background-image: url('https://ustatic.joymew.com/joymewScreen/zshl/mobile/hbBox.png');
+background-size: 100% 100%;
+width: 726px;
+height: 760px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: flex-end;
+}
+.signWrap.zshl .signForm.noAvatar.noPhone::after {
+content: "一起看美照、送祝福、玩游戏吧～";
+display: block;
+font-size: 29px;
+font-weight: 500;
+color: #dc5f22;
+text-align: center;
+width: 100%;
+position: absolute;
+top: 312px;
+}
+.signWrap.zshl .signForm .formItem {
+align-items: center;
+width: 550px;
+margin-bottom: 20px;
+}
+.signWrap.zshl .signForm.noAvatar .formItem {
+flex-direction: column;
+align-items: flex-start;
+}
+.signWrap.zshl .signForm .formItem .formItem-key {
+color: #dc5f22;
+width: 135px;
+}
+.signWrap.zshl .signForm.noAvatar .formItem .formItem-key {
+margin-bottom: 20px;
+}
+.signWrap.zshl .signForm .formItem .formItem-value {
+color: #f32647;
+border-bottom: 1px solid #dc5f22;
+}
+.signWrap.zshl .signForm.noAvatar .formItem .formItem-value {
+width: 100%;
+}
+.signWrap.zshl .signForm .formItem .formItem-value.chooseGroup {
+justify-content: space-around;
+border-bottom: none;
+}
+.signWrap.zshl .signForm .formItem .formItem-value.chooseGroup .chooseItem {
+width: 122px;
+height: 55px;
+background: #eecc85;
+border-radius: 20px;
+font-size: 28px;
+font-weight: 400;
+text-align: center;
+line-height: 55px;
+color: #ec6f31;
+}
+.signWrap.zshl
+.signForm
+.formItem
+.formItem-value.chooseGroup
+.chooseItem.choosed {
+color: #ffffff;
+background: #bc7b40;
+}
+.signWrap.zshl .signForm .buttonWrap .signButton {
+background-image: url("https://ustatic.joymew.com/joymewScreen/zshl/mobile/btnBg.png");
+border-radius: 45px;
+width: 248px;
+height: 109px;
+position: relative;
+margin-top: 40px;
+}
+
+.signWrap.zshl .signForm .buttonWrap .signButton::after {
+top: 29px;
+} 

@@ -1,0 +1,47 @@
+/* 签到企业版样式 */
+.signWrap.enterprise .bg {
+background-image: url("https://static.hudongmiao.com/joymewMp/joymewIndex/bg-annualMeeting01.png");
+background-size: cover;
+background-position-y: -20px;
+background-repeat: no-repeat;
+}
+
+.signWrap.enterprise .signForm {
+background-image: url("https://static.hudongmiao.com/joymewMp/joymewIndex/boxQy01.png");
+}
+
+.signWrap.enterprise .signForm .title {
+position: absolute;
+color: transparent;
+background-image: linear-gradient(45deg, #e4af57, #fce688);
+font-size: 60px;
+padding: 0 20px;
+-webkit-background-clip: text;
+width: 100%;
+top: -200px;
+text-align: center;
+}
+
+.signWrap.enterprise .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.enterprise .signForm .formItem .formItem-key {
+color: #facd7f;
+width: 135px;
+}
+
+.signWrap.enterprise .signForm .formItem .formItem-value {
+color: #fff;
+border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.signWrap.enterprise .signForm .buttonWrap .signButton {
+background-image: url('https://static.hudongmiao.com/joymewMp/joymewIndex/signBtnQy01.png');
+}
+
+.signWrap.enterprise .signForm .buttonWrap .signButton::after {
+content: "";
+display: none;
+position: absolute;
+} 

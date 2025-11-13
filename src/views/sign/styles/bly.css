@@ -1,0 +1,27 @@
+/* 签到百露宴样式 */
+.signWrap.bly .bg {
+background-image: url("https://static.hudongmiao.com/joymewMp/bly/blyBg.png");
+}
+
+.signWrap.bly .signForm {
+background-color: #f9eded;
+}
+
+.signWrap.bly .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.bly .signForm .formItem .formItem-key {
+color: #333;
+width: 135px;
+}
+
+.signWrap.bly .signForm .formItem .formItem-value {
+color: #333;
+border-bottom: 1px solid rgba(51, 51, 51, 0.6);
+}
+
+.signWrap.bly .signForm .buttonWrap .signButton {
+background: #fab0ce;
+border-radius: 45px;
+} 

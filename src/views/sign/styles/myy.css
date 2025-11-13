@@ -1,0 +1,27 @@
+/* 签到满月宴样式 */
+.signWrap.myy .bg {
+background-image: url("https://static.hudongmiao.com/joymewMp/myyBg.png");
+}
+
+.signWrap.myy .signForm {
+background-color: #f9eded;
+}
+
+.signWrap.myy .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.myy .signForm .formItem .formItem-key {
+color: #333;
+width: 135px;
+}
+
+.signWrap.myy .signForm .formItem .formItem-value {
+color: #333;
+border-bottom: 1px solid rgba(51, 51, 51, 0.6);
+}
+
+.signWrap.myy .signForm .buttonWrap .signButton {
+background: #fab0ce;
+border-radius: 45px;
+} 

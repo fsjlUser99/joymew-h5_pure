@@ -1,0 +1,47 @@
+/* 签到宝宝宴样式 */
+.signWrap.bby .bg {
+  background-color: #e4c4c4;
+}
+.signWrap.bby .bg::before {
+  display: block;
+  content: "";
+  background-size: 100% 100%;
+  background-image: url("https://static.joymew.com/joymewMp/joymewIndex/bbyDeco02.png");
+  width: 100%;
+  height: 340px;
+  position: absolute;
+  top: 0;
+}
+
+.signWrap.bby .bg::after {
+  display: block;
+  content: "";
+  background-size: 100% 100%;
+  background-image: url("https://static.joymew.com/joymewMp/joymewIndex/bbyDeco01.png");
+  width: 100%;
+  height: 941px;
+  position: absolute;
+  top: 29px;
+}
+
+.signWrap.bby .signForm {
+  background-color: #f9eded;
+}
+
+.signWrap.bby .formItem {
+  align-items: center;
+}
+
+.signWrap.bby .formItem .formItem-key {
+  color: #333;
+  width: 135px;
+}
+.signWrap.bby .formItem .formItem-value {
+  color: #333;
+  border-bottom: 1px solid rgba(51, 51, 51, 0.6);
+}
+
+.signWrap.bby .signButton {
+  background: #fab0ce;
+  border-radius: 45px;
+}

@@ -1,0 +1,27 @@
+/* 签到文旅样式 */
+.signWrap.wl .bg {
+background-image: url("https://ustatic.hudongmiao.com/joymewMp/joymewIndex/wlBg.png");
+}
+
+.signWrap.wl .signForm {
+background-image: url(https://static.joymew.com/joymewMp/joymewIndex/signBoxBgHX.png);
+}
+
+.signWrap.wl .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.wl .signForm .formItem .formItem-key {
+color: #fff;
+width: 135px;
+}
+
+.signWrap.wl .signForm .formItem .formItem-value {
+color: #fff;
+border-bottom: 1px solid rgba(25, 255, 255, 0.6);
+}
+
+.signWrap.wl .signForm .buttonWrap .signButton {
+background: #b3e0ee;
+border-radius: 45px;
+} 

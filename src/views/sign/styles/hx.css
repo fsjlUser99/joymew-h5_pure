@@ -1,0 +1,27 @@
+/* 签到会销样式 */
+.signWrap.hx .bg {
+background-image: url("https://static.joymew.com/joymewMp/joymewIndex/hxBg.png");
+}
+
+.signWrap.hx .signForm {
+background-image: url(https://static.joymew.com/joymewMp/joymewIndex/signBoxBgHX.png);
+}
+
+.signWrap.hx .signForm .formItem {
+align-items: center;
+}
+
+.signWrap.hx .signForm .formItem .formItem-key {
+color: #fff;
+width: 135px;
+}
+
+.signWrap.hx .signForm .formItem .formItem-value {
+color: #fff;
+border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.signWrap.hx .signForm .buttonWrap .signButton {
+background: #b3e0ee;
+border-radius: 45px;
+} 

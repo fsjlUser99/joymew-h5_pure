@@ -24,16 +24,8 @@ export function setToken(token) {
 export function clearToken() {
   setToken('');
 }
-
-export function buildWechatOAuthUrl({ appId, redirectUri, scope = 'snsapi_userinfo', state = '' }) {
-  const encodedRedirect = encodeURIComponent(redirectUri);
-  const encodedState = encodeURIComponent(state);
-  return `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${encodedRedirect}&response_type=code&scope=${scope}&state=${encodedState}#wechat_redirect`;
-}
-
 export default {
   getToken,
   setToken,
   clearToken,
-  buildWechatOAuthUrl,
 };
