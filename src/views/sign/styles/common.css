@@ -1,3 +1,33 @@
+/* 字体图标 */
+@font-face {
+  font-family: 'iconfont';
+  src: url('https://ustatic.hudongmiao.com/%20miao/font/iconfont.woff2?t=1713160784549') format('woff2'),
+       url('https://ustatic.hudongmiao.com/%20miao/font/iconfont.woff?t=1713160784549') format('woff'),
+       url('https://static.hudongmiao.com/%20miao/font/iconfont.ttf?t=1713160784549') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fanhui:before {
+  content: "\e61e";
+}
+
+.icon-shouji:before {
+  content: "\e8b9";
+}
+
+.icon-shuaxin:before {
+  content: "\ec08";
+}
+
+
+
 /* 签到公共样式 */
 .joymewIndex {
   width: 100vw;
@@ -45,7 +75,6 @@
 .formItem {
   padding: 0 40px;
   display: flex;
-  align-items: center;
   font-size: 32px;
   font-weight: 400;
   margin-bottom: 40px;
@@ -68,7 +97,7 @@
 
 .icon-shuaxin {
   font-weight: 600;
-  width: 60px;
+  font-size: 32px;
   display: block;
   text-align: right;
 }

@@ -100,6 +100,7 @@ const state = {
   sendGiftLotteryNum: 0, // 发送礼物抽奖次数
   sendGiftLotterySwitch: false, // 发送礼物抽奖开关
   dz_hltcard: false, // 定制婚礼堂小程序卡片
+  isCustomBackground: false, // 是否为自定义背景
 };
 
 const mutations = {
@@ -165,12 +166,14 @@ const mutations = {
   },
   setBackground: (state, data) => {
     let tmpBg = '';
-    // state.background = data || state.background;
+    // Check if this is a custom background (data is provided and not '0')
     if (data && data !== '0') {
       tmpBg = data;
+      state.isCustomBackground = true;
     } else {
       const tmpSceneInfo = getSceneInfoBySceneType(state.sceneType);
       tmpBg = tmpSceneInfo && tmpSceneInfo.bg;
+      state.isCustomBackground = false;
     }
     state.background = tmpBg;
     commitBackgroundFileList({

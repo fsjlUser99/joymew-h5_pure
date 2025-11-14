@@ -1,6 +1,5 @@
 <template>
   <div class="joymewIndex">
-    <!-- The rest of the template remains the same -->
     <div :class="['signWrap', sceneAlias, customSignBg ? 'customSignBg' : '']">
       <!-- 背景 -->
       <div class="bg">
@@ -19,26 +18,6 @@
           {{ activityTitle }}
         </div>
 
-        <div
-          class="formItem benifit-text"
-          v-if="sceneType === '0'"
-        >
-          一起看美照、送祝福、玩游戏吧～
-        </div>
-
-        <div class="formItem">
-          <div class="formItem-key">姓名:</div>
-          <div class="formItem-value">
-            <input
-              class="inputNickName"
-              maxlength="12"
-              placeholder="请输入姓名"
-              :value="userName"
-              disabled
-            />
-          </div>
-        </div>
-
         <div class="formItem">
           <div class="formItem-key">祝福语:</div>
           <div class="formItem-value">
@@ -54,28 +33,6 @@
           </div>
         </div>
 
-        <div
-          v-if="identitySwitch &amp;&amp; (sceneType === '0' || sceneType === '91')"
-          class="formItem"
-        >
-          <div class="formItem-key">亲友:</div>
-          <div class="formItem-value chooseGroup">
-            <div
-              class="chooseItem"
-              :class="{ choosed: type === '1' }"
-              @click="type = '1'"
-            >
-              男方
-            </div>
-            <div
-              class="chooseItem"
-              :class="{ choosed: type === '2' }"
-              @click="type = '2'"
-            >
-              女方
-            </div>
-          </div>
-        </div>
 
         <div
           v-if="isForcePhone"
@@ -116,7 +73,6 @@ export default {
     return {
       wish: '',
       phoneNumber: '',
-      type: '', // 1: 男方, 2: 女方
     };
   },
   computed: {
@@ -125,12 +81,14 @@ export default {
       customSignWish: (state) => state.live.customSignWish,
       sceneType: (state) => state.live.sceneType,
       activityTitle: (state) => state.live.title,
-      customSignBg: (state) => state.live.background,
+      customSignBg: (state) => {
+        // Only return background if it's a custom background
+        return state.live.isCustomBackground ? state.live.background : '';
+      },
       isOverDate: (state) => state.live.isOverDate,
       isForcePhone: (state) => state.live.isForcePhone,
       identitySwitch: (state) => state.live.identitySwitch,
       // user module
-      userName: (state) => state.user.name,
       userPhone: (state) => state.user.userPhone,
     }),
     sceneAlias() {
@@ -184,10 +142,6 @@ export default {
       this.wish = getWishBySceneType(this.sceneType);
     },
     sign() {
-      if (!this.userName) {
-        this.$toast.center('贵宾姓名不能为空!');
-        return;
-      }
       if (!this.wish) {
         this.$toast.center('祝福语不能为空!');
         return;
@@ -208,9 +162,7 @@ export default {
       }
       signIn({
         wish: this.wish,
-        name: this.userName,
         phonenumber: this.phoneNumber,
-        type: this.type,
       })
         .then(() => {
           this.$store.commit('app/setQiandaoleme', true);

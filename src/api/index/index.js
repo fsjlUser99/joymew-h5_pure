@@ -152,12 +152,21 @@ export function reqGetUserInfo() {
 
 // 签到
 export function signIn(paramObj) {
-  return request.post('hmScanReportController/qianDao', {
-    avator: store.state.user.headImg,
+  const paramObjAll = {
     splid: store.state.live.liveId,
     bless_str: paramObj.wish,
-    wx_name: paramObj.name,
+    phonenumber: paramObj.phonenumber,
+  };
+  
+  // 过滤掉空值参数
+  const filteredParams = {};
+  Object.keys(paramObjAll).forEach(key => {
+    if (paramObjAll[key]) {
+      filteredParams[key] = paramObjAll[key];
+    }
   });
+  
+  return request.post('hmScanReportController/qianDao', filteredParams);
 }
 
 // 获取男女方发送礼物排行榜
