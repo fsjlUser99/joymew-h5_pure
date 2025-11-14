@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <router-view />
-    <loading v-if="!isInOtherWeviewH5" />
+    <loading />
   </div>
 </template>
 <script>
 import { mapMutations, mapState } from 'vuex';
 import wxApi from '@/utils/wxApi';
 import connectWS from '@/utils/websocket/index';
-import { getUrlParam, isEndWithX, timeoutTask } from '@/utils/index';
+import { getUrlParam } from '@/utils/index';
 import { getToken as getStoredToken, setToken as persistToken } from '@/utils/auth';
 import {
   formatPhotoTypeList,
@@ -20,24 +20,8 @@ import {
   updateSeatPopupFlag,
   removeSeatPopupFlag,
 } from '@/utils/service';
-import {
-  getLiveInfo,
-  getGiftList,
-  getHBKDInfo,
-  getGameStatus,
-  buyVipEnterEffect,
-  editUserInfo,
-  sendGift,
-  sendBapinGift,
-  sendDanmuGift,
-  uploadPhoto,
-  sendPhotoGift,
-  sendGiftCarnival,
-  getH5DirectVisitInfo,
-} from '@/api/index/index';
-import { sendGiftMessage, sendBapinGiftMessage, sendDanmuGiftMessage, sendPhotoGiftMessage } from '@/api/chat/index';
-import { sendDiamondHb } from '@/api/diamondHb/index';
-import { POPUP_MODULE, WEBVIEWH5 } from '@/assets/constant/index';
+import { getLiveInfo, getGiftList, getHBKDInfo, getGameStatus, uploadPhoto } from '@/api/index/index';
+import { POPUP_MODULE } from '@/assets/constant/index';
 import loading from '@/components/loading/loading.vue';
 
 export default {
@@ -52,7 +36,6 @@ export default {
   },
   computed: {
     ...mapState({
-      isInOtherWeviewH5: (state) => state.app.isInOtherWeviewH5,
       isCloseCoin: (state) => state.app.isCloseCoin,
       needLogin: (state) => state.app.needLogin,
     }),
@@ -122,7 +105,6 @@ export default {
       setPhotographerWallInfo: 'app/setPhotographerWallInfo',
       setHotelReserveVisible: 'app/setHotelReserveVisible',
       setHotelReserveIcon: 'app/setHotelReserveIcon',
-      setIsInOtherWeviewH5: 'app/setIsInOtherWeviewH5',
       setForcePhone: 'live/setForcePhone',
       setIsOverDate: 'live/setIsOverDate',
       setAllFreeSendGift: 'live/setAllFreeSendGift',
@@ -153,35 +135,26 @@ export default {
       if (this.$route.meta?.skipAppBootstrap) {
         return;
       }
-
       // 已经启动过,不重复启动
       if (this.hasBootstrapped) {
         return;
       }
-
       // 检查token
       const urlToken = getUrlParam('token');
       if (urlToken) {
         persistToken(urlToken);
       }
-
       const storedToken = getStoredToken();
       if (!storedToken) {
         // 没有token,标记需要登录
         this.$store.commit('app/setNeedLogin', true);
         return;
       }
-
       // 有token,正常初始化
       this.hasBootstrapped = true;
       this.initializeApp(storedToken);
     },
-    initializeApp(token, isGuessHbPay) {
-      if (isGuessHbPay) {
-        this.setIsInOtherWeviewH5(true);
-        this.initGuessHbLogic();
-        return;
-      }
+    initializeApp(token) {
       if (token) {
         this.setToken(token);
         this.$store.commit('app/setNeedLogin', false);
@@ -197,22 +170,11 @@ export default {
         enter: getUrlParam('enter'),
         userphone: getUrlParam('userphone'),
       });
-      this.setIsInOtherWeviewH5(WEBVIEWH5.some((item) => isEndWithX(window.location.href, item)));
-      wxApi
-        .judgeEnv()
-        .then(() => {
-          return this.$store.state.app.env;
-        })
-        .then((rEnv) => {
-          if (rEnv === 'h5' && isEndWithX(window.location.href, 'hotelReserve')) {
-            this.initH5HotelReserveLogic();
-          } else if (rEnv === 'h5') {
-            wxApi.initWXAPI().then((res) => {
-              console.log(res);
-            });
-          }
-          return getLiveInfo();
-        })
+
+      wxApi.initWXAPI().then((res) => {
+        console.log(res);
+      });
+      getLiveInfo()
         .then((res) => {
           console.log('活动信息:', res);
           if (res) {
@@ -222,255 +184,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    setEnterSceneInfo() {
-      if (this.$store.state.app.isInOtherWeviewH5) {
-        // 其他webview容器打开应用的情况下不需要设置进入场景
-        return;
-      }
-      if (this.$store.state.app.env === 'h5') {
-        // h5版互动不需要设置进入场景
-        return;
-      }
-      if (this.$store.state.app.mpType) {
-        return;
-      }
-      // 进入场景
-      const origin = getUrlParam('origin');
-      if (origin === 'sendGift') {
-        if (this.isCloseCoin && localStorage.getItem('tmpGiftId')) {
-          sendGift({
-            giftId: localStorage.getItem('tmpGiftId'),
-          })
-            .then((res1) => {
-              // 更新 用户余额
-              this.setUserInfo({
-                money: res1.result.balance,
-              });
-              return sendGiftMessage({
-                giftId: localStorage.getItem('tmpGiftId'),
-              }); // 发送礼物的广播
-            })
-            .then(() => {
-              localStorage.removeItem('tmpGiftId');
-              this.$toast.center('发送成功!');
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          // 发礼物
-          this.togglePopup(POPUP_MODULE.giftModule.key);
-        }
-      } else if (origin === 'sendGiftCarnival') {
-        if (this.isCloseCoin && localStorage.getItem('tmpGiftId')) {
-          sendGiftCarnival({
-            giftId: localStorage.getItem('tmpGiftId'),
-          })
-            .then((res1) => {
-              // 更新 用户余额
-              this.setUserInfo({
-                money: res1.result.balance,
-              });
-              return sendGiftMessage({
-                giftId: localStorage.getItem('tmpGiftId'),
-              }); // 发送礼物的广播
-            })
-            .then(() => {
-              localStorage.removeItem('tmpGiftId');
-              this.$toast.center('发送成功!');
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          // 发礼物
-          this.togglePopup(POPUP_MODULE.giftModule.key);
-        }
-      } else if (origin === 'sendBapin') {
-        if (this.isCloseCoin && localStorage.getItem('tmpGiftId') && localStorage.getItem('tmpGiftText')) {
-          sendBapinGift({
-            content: localStorage.getItem('tmpGiftText'),
-            giftId: localStorage.getItem('tmpGiftId'),
-          })
-            .then((res1) => {
-              console.log(res1);
-              // 更新 用户余额
-              this.setUserInfo({
-                money: res1.result.balance,
-              });
-              return sendBapinGiftMessage({
-                giftId: localStorage.getItem('tmpGiftId'),
-                content: localStorage.getItem('tmpGiftText'),
-              }); // 发送礼物的广播
-            })
-            .then(() => {
-              localStorage.removeItem('tmpGiftId');
-              localStorage.removeItem('tmpGiftText');
-              this.$toast.center('发送成功!');
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          // 发霸屏
-          this.togglePopup(POPUP_MODULE.bapinModule.key);
-        }
-      } else if (origin === 'sendPhoto') {
-        if (
-          this.isCloseCoin &&
-          localStorage.getItem('tmpGiftId') &&
-          localStorage.getItem('tmpGiftText') &&
-          localStorage.getItem('tmpGiftPicture')
-        ) {
-          this.uploadPhoto().then((res1) => {
-            console.log(res1);
-            return sendPhotoGift({
-              imgUrl: res1.filePath,
-              giftId: localStorage.getItem('tmpGiftId'),
-              content: localStorage.getItem('tmpGiftText'),
-            })
-              .then((res2) => {
-                // 更新 用户余额
-                this.setUserInfo({
-                  money: res2.result.balance,
-                });
-                return sendPhotoGiftMessage({
-                  giftId: localStorage.getItem('tmpGiftId'),
-                  content: localStorage.getItem('tmpGiftText'),
-                  imgUrl: res1.filePath,
-                }); // 发送礼物的广播
-              })
-              .then((res3) => {
-                console.log(res3);
-                localStorage.removeItem('tmpGiftId');
-                localStorage.removeItem('tmpGiftText');
-                localStorage.removeItem('tmpGiftPicture');
-                this.$toast.center('发送成功!');
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          });
-        } else {
-          // 发照片
-          this.togglePopup(POPUP_MODULE.photoModule.key);
-        }
-      } else if (origin === 'sendDanmu') {
-        if (this.isCloseCoin && localStorage.getItem('tmpGiftId') && localStorage.getItem('tmpGiftText')) {
-          sendDanmuGift({
-            giftId: localStorage.getItem('tmpGiftId'),
-            content: localStorage.getItem('tmpGiftText'),
-          })
-            .then((res1) => {
-              // 更新 用户余额
-              this.setUserInfo({
-                money: res1.result.balance,
-              });
-              return sendDanmuGiftMessage({
-                giftId: localStorage.getItem('tmpGiftId'),
-                content: localStorage.getItem('tmpGiftText'),
-              }); // 发送礼物的广播
-            })
-            .then(() => {
-              this.$toast.center('发送成功!');
-              localStorage.removeItem('tmpGiftId');
-              localStorage.removeItem('tmpGiftText');
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          // 发弹幕
-          this.togglePopup(POPUP_MODULE.danmuModule.key);
-        }
-      } else if (origin === 'sendDanmuHby') {
-        // 红包雨等待界面发弹幕
-        this.$router.push({
-          path: '/hby',
-        });
-        if (this.isCloseCoin && localStorage.getItem('tmpGiftId') && localStorage.getItem('tmpGiftText')) {
-          sendDanmuGift({
-            content: localStorage.getItem('tmpGiftText'),
-            giftId: localStorage.getItem('tmpGiftId'),
-          })
-            .then((res1) => {
-              // 更新 用户余额
-              this.setUserInfo({
-                money: res1.result.balance,
-              });
-              return sendDanmuGiftMessage({
-                giftId: localStorage.getItem('tmpGiftId'),
-                content: localStorage.getItem('tmpGiftText'),
-              }); // 发送礼物的广播
-            })
-            .then(() => {
-              this.$toast.center('发送成功!');
-              localStorage.removeItem('tmpGiftId');
-              localStorage.removeItem('tmpGiftText');
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        } else {
-          timeoutTask(() => {
-            this.togglePopup(POPUP_MODULE.danmuModule.key);
-          }, 1000);
-        }
-      } else if (origin === 'purchaseEnterEffect') {
-        const tmpGiftId = localStorage.getItem('tmpGiftId');
-        // 购买进场特效
-        buyVipEnterEffect(tmpGiftId)
-          .then((res) => {
-            console.log(res);
-            localStorage.removeItem('tmpGiftId');
-            if (res.code === '200') {
-              this.$toast.center('进场特效购买成功!');
-              timeoutTask(() => {
-                window.location.reload();
-              }, 1000);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else if (origin === 'editInfo') {
-        const tmpEditInfo = JSON.parse(localStorage.getItem('tmpEditInfo'));
-        editUserInfo(tmpEditInfo)
-          .then((res) => {
-            localStorage.removeItem('tmpEditInfo');
-            if (res.code === '200') {
-              this.$toast.center('修改成功!');
-              this.setUserInfo({
-                name: tmpEditInfo.wx_name,
-                headImg: tmpEditInfo.avator,
-                relativeType: tmpEditInfo.type,
-                deskNum: tmpEditInfo.table_number,
-                currentStatus: tmpEditInfo.position,
-              });
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else if (origin === 'sendDiamondHb') {
-        const tmpSendDiamondHbData = JSON.parse(localStorage.getItem('tmpSendDiamondHbData'));
-        sendDiamondHb(tmpSendDiamondHbData)
-          .then((res) => {
-            console.log(res);
-            localStorage.removeItem('tmpSendDiamondHbData');
-            // 更新 用户余额
-            this.setUserInfo({
-              money: res.user.balance,
-            });
-            this.$toast.center('发送成功!');
-          })
-          .catch((err) => {
-            console.log(err);
-            this.$toast.center('发送失败!');
-          });
-      }
-      this.setOrigin('');
     },
     handleLiveInfo(res) {
       // 设置用户信息
@@ -656,10 +369,6 @@ export default {
       this.setHltHotelName(res.splid.hotel_name);
       // 设置红包口袋New列表
       this.setHbkdRechargeNewList(res?.siyiInfo?.hbkd_str);
-      // 直接点链接进入婚宴预定的情况取消执行下面的逻辑
-      if (this.$store.state.app.env === 'h5' && isEndWithX(window.location.href, 'hotelReserve')) {
-        return;
-      }
       // 获取game状态
       this.getGameState();
       // 获取礼物列表
@@ -723,10 +432,6 @@ export default {
       this.setCurrentBapinType(bapinTypeListFormat[0].giftId);
     },
     getGameState() {
-      if (this.$store.state.app.isInOtherWeviewH5) {
-        // 其他webview容器打开应用的情况下不需要获取进入game状态
-        return;
-      }
       getGameStatus()
         .then((res) => {
           console.log('game状态:', res);
@@ -795,27 +500,16 @@ export default {
         });
     },
     getGiftList() {
-      if (this.$store.state.app.isInOtherWeviewH5) {
-        // 其他webview容器打开应用的情况下不需要获取礼物列表
-        return;
-      }
       getGiftList()
         .then((res) => {
           console.log(res);
           this.handleGiftInfo(res);
-          if (this.$store.state.app.env === 'miniProgram' || this.$store.state.app.env === 'tt') {
-            this.setEnterSceneInfo();
-          }
         })
         .catch((err) => {
           console.log(err);
         });
     },
     getHBKDInfo() {
-      if (this.$store.state.app.isInOtherWeviewH5) {
-        // 其他webview容器打开应用的情况下不需要获取红包口袋金额
-        return;
-      }
       getHBKDInfo()
         .then((res) => {
           console.log(res);
@@ -827,29 +521,7 @@ export default {
           console.log(err);
         });
     },
-    initGuessHbLogic() {
-      console.log('初始化猜红包逻辑');
-    },
-    initH5HotelReserveLogic() {
-      console.log('h5直接访问婚宴预定逻辑');
-      if (getUrlParam('token')) {
-        return;
-      }
-      if (this.$store.state.app.inWeixinBrowse) {
-        window.location.href = `/h5UserLogin/yunJingH51?splid=${getUrlParam('splid')}`;
-        return;
-      }
-      getH5DirectVisitInfo()
-        .then((res) => {
-          console.log(res);
-          window.location = `/?liveId=${getUrlParam('splid')}&token=${res.token}&isHlt=${getUrlParam('isHlt')}&time=${getUrlParam(
-            'time',
-          )}#/hotelReserve`;
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
+
     uploadPhoto() {
       const formData = new FormData();
       const tmpPreviewImg = localStorage.getItem('tmpGiftPicture');

@@ -70,7 +70,7 @@
       <div class="prizeAndRelative publicVCenter">
         <div
           class="item prize publicVCenter"
-          v-if="!isTql && env === 'miniProgram'"
+          v-if="!isTql"
           v-tap="{ methods: toWinningRecord }"
         >
           中奖信息
@@ -210,7 +210,6 @@ export default {
       editUserInfoPrice: (state) => state.app.editUserInfoPrice,
       diamondHbQueue: (state) => state.live.diamondHbQueue,
       isExamineLive: (state) => state.live.isExamineLive,
-      env: (state) => state.app.env,
       loadingVisible: (state) => state.app.loadingVisible,
       isCloseCoin: (state) => state.app.isCloseCoin,
       seatSwitch: (state) => state.live.seatSwitch,
@@ -331,14 +330,11 @@ export default {
       wxApi.navigateTo(`/pages/share/vote/vote?splid=${splid}`);
     },
     toFeedBack() {
-      if (this.env === 'miniProgram') {
-        _hmt.push(['_trackEvent', '顶部区域', '点击', '客服反馈']);
-        this.judgeMpTypeThenToFeedback();
-      } else if (this.env === 'h5') {
-        this.$router.push({
-          path: '/feedback',
-        });
-      }
+      // 重构为H5环境，只保留H5逻辑
+      _hmt.push(['_trackEvent', '顶部区域', '点击', '客服反馈']);
+      this.$router.push({
+        path: '/feedback',
+      });
     },
     judgeMpTypeThenToFeedback() {
       if (this.mpType) {
@@ -356,55 +352,20 @@ export default {
         this.$toast.center(this.$store.state.live.locationInvalidReason);
         return;
       }
-      if (this.env === 'miniProgram') {
-        _hmt.push(['_trackEvent', '顶部区域', '点击', '进入个人中心']);
-        wxApi.tmpNavigateTo('recharge', {
-          openId: this.$store.state.user.openId,
-          userId: this.$store.state.user.userId,
-          money: this.$store.state.user.money,
-          rechargeListStr: this.rechargeList,
-          name: this.name,
-          headImg: this.headImg,
-          relativeType: this.relativeType,
-          deskNum: this.deskNum,
-          currentStatus: this.currentStatus,
-          editUserInfoPrice: this.editUserInfoPrice,
-          isCloseCoin: this.isCloseCoin,
-          vipLevel: this.vipLevel,
+      // 重构为H5环境，只保留H5逻辑
+      _hmt.push(['_trackEvent', '顶部区域', '点击', '进入个人中心']);
+      if (this.sceneType === '0') {
+        this.$router.push({
+          path: '/rechargeWedding',
         });
-      } else if (this.env === 'h5') {
-        if (this.sceneType === '0') {
-          this.$router.push({
-            path: '/rechargeWedding',
-          });
-        } else {
-          this.$router.push({
-            path: '/rechargeOther',
-          });
-        }
-      } else if (this.env === 'tt') {
-        if (this.sceneType === '0' && !this.isTql) {
-          wxApi.navigateToTt(
-            `/pages/recharge2/recharge2?openId=${this.$store.state.user.openId}&userId=${this.$store.state.user.userId}&money=${this.$store.state.user.money}&rechargeListStr=${this.rechargeList}&name=${this.name}&headImg=${this.headImg}&isVipHeadBoxGetted=${this.isVipHeadBoxGetted}&relativeType=${this.relativeType}&vipLevel=${this.vipLevel}&deskNum=${this.deskNum}&currentStatus=${this.currentStatus}&editUserInfoPrice=${this.editUserInfoPrice}`,
-          );
-          console.log(
-            `/pages/recharge2/recharge2?openId=${this.$store.state.user.openId}&userId=${this.$store.state.user.userId}&money=${this.$store.state.user.money}&rechargeListStr=${this.rechargeList}&name=${this.name}&headImg=${this.headImg}&isVipHeadBoxGetted=${this.isVipHeadBoxGetted}&relativeType=${this.relativeType}&vipLevel=${this.vipLevel}&deskNum=${this.deskNum}&currentStatus=${this.currentStatus}&editUserInfoPrice=${this.editUserInfoPrice}`,
-          );
-        } else {
-          wxApi.navigateToTt(
-            `/pages/recharge/recharge?openId=${this.$store.state.user.openId}&userId=${this.$store.state.user.userId}&money=${this.$store.state.user.money}&rechargeListStr=${this.rechargeList}&name=${this.name}&headImg=${this.headImg}&isVipHeadBoxGetted=${this.isVipHeadBoxGetted}&relativeType=${this.relativeType}&vipLevel=${this.vipLevel}&deskNum=${this.deskNum}&currentStatus=${this.currentStatus}&editUserInfoPrice=${this.editUserInfoPrice}`,
-          );
-          console.log(
-            `/pages/recharge/recharge?openId=${this.$store.state.user.openId}&userId=${this.$store.state.user.userId}&money=${this.$store.state.user.money}&rechargeListStr=${this.rechargeList}&name=${this.name}&headImg=${this.headImg}&isVipHeadBoxGetted=${this.isVipHeadBoxGetted}&relativeType=${this.relativeType}&vipLevel=${this.vipLevel}&deskNum=${this.deskNum}&currentStatus=${this.currentStatus}&editUserInfoPrice=${this.editUserInfoPrice}`,
-          );
-        }
+      } else {
+        this.$router.push({
+          path: '/rechargeOther',
+        });
       }
     },
     toWinningRecord() {
-      if (this.env === 'miniProgram') {
-        _hmt.push(['_trackEvent', '顶部区域', '点击', '查看抽奖中奖结果']);
-        this.jumpMpTypeThenToWinningRecord();
-      }
+      // 重构为H5环境，小程序相关逻辑已移除
     },
     jumpMpTypeThenToWinningRecord() {
       if (this.mpType) {
@@ -414,10 +375,7 @@ export default {
       }
     },
     toSignRank() {
-      if (this.env === 'miniProgram') {
-        _hmt.push(['_trackEvent', '顶部区域', '点击', '查看送祝福排名']);
-        wxApi.navigateTo(`/packageA/pages/wishRank/wishRank?userId=${this.$store.state.user.userId}`);
-      }
+      // 重构为H5环境，小程序相关逻辑已移除
     },
     openPopupModule(e) {
       if (this.isForbidBuyHbq) {

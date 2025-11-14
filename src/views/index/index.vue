@@ -7,7 +7,7 @@
     <!-- 背景 -->
     <background />
     <!-- 头部区域 -->
-    <myHeader v-if="env !== 'tt'" />
+    <myHeader />
     <!-- 底部区域 -->
     <bottomArea />
     <!-- 右下角区域 -->
@@ -77,7 +77,6 @@ export default {
       bapinCloseIconVisible: (state) => state.app.bapinCloseIconVisible,
       isForbidBuyHbq: (state) => state.user.isForbidBuyHbq,
       isLocationInvalid: (state) => state.live.isLocationInvalid,
-      env: (state) => state.app.env,
     }),
     inVote() {
       return this.$store.state.game.currentGameCode === 'vote';
@@ -220,9 +219,7 @@ export default {
     },
     onCheckWinningBtnClick() {
       _hmt.push(['_trackEvent', '查看抽奖结果弹窗', '点击', '跳转查看抽奖中奖记录']);
-      if (this.env === 'miniProgram') {
-        this.judgeMpTypeThenToWinningRecord();
-      }
+      // 重构为H5环境，小程序相关逻辑已移除
     },
     judgeMpTypeThenToWinningRecord() {
       if (this.$store.state.app.mpType) {

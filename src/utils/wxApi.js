@@ -109,43 +109,6 @@ export default {
       }
     });
   },
-  // 判断代码执行环境
-  judgeEnv() {
-    return new Promise((resolve, reject) => {
-      const ua = navigator.userAgent.toLowerCase();
-      console.log(ua);
-      if (ua && ua.match(/MicroMessenger/i) && ua.match(/MicroMessenger/i).toString() === 'micromessenger') {
-        // ios的ua中无miniProgram，但都有MicroMessenger（表示是微信浏览器）
-        this.getEnv()
-          .then((res) => {
-            console.log(res);
-            if (res.miniprogram) {
-              console.log('在小程序里');
-              store.commit('app/setEnv', 'miniProgram');
-              resolve('miniProgram');
-            } else {
-              console.log('不在小程序里');
-              store.commit('app/setEnv', 'h5');
-              store.commit('app/setInWeixinBrowse', true); // 在微信浏览器里
-              resolve('h5');
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            reject(err);
-          });
-      } else if (ua && ua.match(/toutiaomicroapp/i) && ua.match(/toutiaomicroapp/i).toString() === 'toutiaomicroapp') {
-        console.log('在抖音里');
-        store.commit('app/setEnv', 'tt');
-        resolve('tt');
-      } else {
-        console.log('不在微信和抖音里');
-        store.commit('app/setEnv', 'h5');
-        store.commit('app/setInWeixinBrowse', false); // 不在微信浏览器里
-        resolve('h5');
-      }
-    });
-  },
   postMsg(msg) {
     wx.miniProgram.postMessage({
       data: msg,

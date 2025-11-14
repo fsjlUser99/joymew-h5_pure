@@ -36,8 +36,6 @@ const state = {
   enterEffectContainerMountedObserver: null, // 观察者对象(监听enterEffectContainer dom是否渲染完成)
   funcTipIndex: 0,
   loadAdVisible: false,
-  env: 'miniProgram', // 取值miniProgram h5 tt
-  inWeixinBrowse: true, // env = h5时判断是否在微信浏览器里
   bottom: 0, // 是否为全面屏
   enter: false, // 是否有导航栏
   userphone: '', // 用户电话
@@ -237,12 +235,6 @@ const mutations = {
   },
   setLoadAdVisible: (state, data) => {
     state.loadAdVisible = data;
-  },
-  setEnv: (state, data) => {
-    state.env = data;
-  },
-  setInWeixinBrowse: (state, data) => {
-    state.inWeixinBrowse = data;
   },
   setIsCloseCoin: (state, data) => {
     // 重构后的互动小程序默认关闭喵币支付

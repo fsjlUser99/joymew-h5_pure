@@ -1,6 +1,5 @@
 import {
   generateRandomId,
-  isEndWithX,
   formatDateConvertTS,
   sCtMs,
   dateCompare,
@@ -159,10 +158,7 @@ const mutations = {
     state.title = data;
     routes[0].meta.title = state.title;
     routes[1].meta.title = state.title;
-    const tmpFlag = WEBVIEWH5.some((item) => isEndWithX(window.location.href, item));
-    if (!tmpFlag) {
-      document.title = state.title;
-    }
+    document.title = state.title;
   },
   setBackground: (state, data) => {
     let tmpBg = '';

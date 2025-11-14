@@ -120,12 +120,6 @@ export const loadImg = (path) => new Promise((resolve, reject) => {
   };
 });
 
-// 判断字符串是否以某个字符串结尾
-export const isEndWithX = (tStr, endStr) => {
-  const d = tStr.length - endStr.length;
-  return d >= 0 && tStr.lastIndexOf(endStr) === d;
-};
-
 // 判断非负数
 export const isUnNegtiveDigit = (targetStr) => {
   const r = /^(\d+)$|^(\d+\.\d{1,2})$/;
